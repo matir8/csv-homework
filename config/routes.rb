@@ -1,3 +1,4 @@
 Rails.application.routes.draw do
   post '/sums' => 'sums#create'
+  post '/filters' => 'filters#create'
 end
