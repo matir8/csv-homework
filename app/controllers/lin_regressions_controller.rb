@@ -1,19 +1,22 @@
 require 'csv'
-require 'linear-regression/linear'
+require 'linefit'
+require 'English'
 
 class LinRegressionsController < ApplicationController
   def create
+    lineFit = LineFit.new
     file = params[:file]
     x_arr = []
     y_arr = []
 
-    CSV.foreach(file.path).with_index(1) do |row, index|
-      x_arr.push index
-      y_arr.push row[1].to_f
+    CSV.foreach(file.path) do |row|
+      x_arr.push $INPUT_LINE_NUMBER
+      y_arr.push row[0].to_f
     end
 
-    result = Regression::Linear.new x_arr, y_arr
+    lineFit.setData(x_arr, y_arr)
+    intercept, slope = lineFit.coefficients
 
-    render plain: '%.6f,%.6f' % [result.slope, result.intercept]
+    render plain: '%.6f,%.6f' % [slope, intercept]
   end
 end
